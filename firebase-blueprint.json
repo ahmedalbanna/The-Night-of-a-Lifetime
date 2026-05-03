@@ -1,0 +1,65 @@
+{
+  "entities": {
+    "Hall": {
+      "title": "Hall",
+      "description": "A wedding or event hall available for booking.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "location": { "type": "string" },
+        "capacity": { "type": "number" },
+        "pricePerNight": { "type": "number" },
+        "depositAmount": { "type": "number" },
+        "images": { "type": "array", "items": { "type": "string" } },
+        "audioTermsUrl": { "type": "string" },
+        "features": { "type": "array", "items": { "type": "string" } },
+        "rating": { "type": "number" }
+      },
+      "required": ["name", "location", "capacity", "pricePerNight", "depositAmount"]
+    },
+    "Booking": {
+      "title": "Booking",
+      "description": "A reservation for a specific hall on a specific date.",
+      "type": "object",
+      "properties": {
+        "hallId": { "type": "string" },
+        "userId": { "type": "string" },
+        "date": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["pending", "confirmed", "cancelled"] },
+        "totalAmount": { "type": "number" },
+        "depositAmount": { "type": "number" },
+        "depositPaid": { "type": "boolean" },
+        "stripeSessionId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["hallId", "userId", "date", "status", "totalAmount"]
+    },
+    "User": {
+      "title": "User",
+      "description": "Application user profile.",
+      "type": "object",
+      "properties": {
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "phoneNumber": { "type": "string" },
+        "photoURL": { "type": "string" }
+      },
+      "required": ["email"]
+    }
+  },
+  "firestore": {
+    "halls": {
+      "schema": "Hall",
+      "description": "Collection of wedding and event halls."
+    },
+    "bookings": {
+      "schema": "Booking",
+      "description": "Collection of hall reservations."
+    },
+    "users": {
+      "schema": "User",
+      "description": "User profiles."
+    }
+  }
+}
