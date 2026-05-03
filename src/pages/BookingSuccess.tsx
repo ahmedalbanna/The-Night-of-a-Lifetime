@@ -36,6 +36,12 @@ export function BookingSuccess() {
     }
   }, [searchParams, saved]);
 
+  const handleShare = () => {
+    const text = `تم حجز قاعة أحلامي! التاريخ: ${searchParams.get("date")}. تابع تفاصيل المناسبة معنا!`;
+    const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+  };
+
   return (
     <div className="min-h-[80vh] flex items-center justify-center py-20 px-4">
       <motion.div 
@@ -75,7 +81,10 @@ export function BookingSuccess() {
             العودة للرئيسية
             <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
           </Link>
-          <button className="text-zinc-500 hover:text-white transition-colors font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 py-2">
+          <button 
+            onClick={handleShare}
+            className="text-zinc-500 hover:text-white transition-colors font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 py-2"
+          >
              <Share2 className="w-4 h-4" />
              مشاركة تفاصيل الحجز عبر الواتساب
           </button>

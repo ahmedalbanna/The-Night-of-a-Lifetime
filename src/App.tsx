@@ -5,6 +5,8 @@ import { auth } from "@/src/lib/firebase";
 import { Home } from "./pages/Home";
 import { HallDetails } from "./pages/HallDetails";
 import { BookingSuccess } from "./pages/BookingSuccess";
+import { MyBookings } from "./pages/MyBookings";
+import { AdminProfile } from "./pages/AdminProfile";
 import { Navbar } from "./components/Navbar";
 
 export default function App() {
@@ -21,8 +23,8 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="min-height-screen flex items-center justify-center bg-zinc-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-bg-dark">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent"></div>
       </div>
     );
   }
@@ -34,8 +36,10 @@ export default function App() {
         <main className="container mx-auto px-4 py-8">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/halls/:id" element={<HallDetails />} />
+            <Route path="/hall/:id" element={<HallDetails />} />
             <Route path="/booking-success" element={<BookingSuccess />} />
+            <Route path="/my-bookings" element={<MyBookings />} />
+            <Route path="/admin/profile" element={<AdminProfile />} />
           </Routes>
         </main>
         <footer className="bg-black text-zinc-500 py-20 border-t border-white/5">

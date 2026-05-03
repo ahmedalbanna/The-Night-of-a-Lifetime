@@ -25,6 +25,13 @@ service cloud.firestore {
       allow read, write: if isOwner(userId);
     }
 
+    // Reviews: Publicly readable, any signed-in user can create
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if isSignedIn();
+      allow update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
     // Bookings: Users can read their own bookings, create new ones, but not update (except via backend)
     match /bookings/{bookingId} {
       allow read: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);

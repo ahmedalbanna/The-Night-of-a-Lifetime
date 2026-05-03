@@ -10,6 +10,20 @@ export interface Hall {
   audioTermsUrl?: string;
   features: string[];
   rating: number;
+  operatingHours?: string;
+  contactPhone?: string;
+  adminId?: string;
+}
+
+export interface Review {
+  id: string;
+  hallId: string;
+  userId: string;
+  userName: string;
+  userPhoto?: string;
+  rating: number;
+  comment: string;
+  createdAt: any;
 }
 
 export interface Booking {

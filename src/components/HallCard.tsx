@@ -1,45 +1,73 @@
 import { Hall } from "@/src/types";
 import { Link } from "react-router-dom";
-import { Users, MapPin, Star, ChevronLeft } from "lucide-react";
+import { Users, MapPin, Star, CheckCircle2, ChevronLeft } from "lucide-react";
 import { motion } from "motion/react";
 
-interface HallCardProps {
-  hall: Hall;
-}
-
-export function HallCard({ hall }: HallCardProps) {
+export function HallCard({ hall }: { hall: Hall }) {
   return (
-    <Link to={`/halls/${hall.id}`} className="group block relative">
-      <div className="bg-surface-dark rounded-[2.5rem] overflow-hidden shadow-2xl transition-all duration-500 border border-white/5 h-full flex flex-col group-hover:border-accent/30 group-hover:shadow-accent/5">
-        <div className="relative aspect-[3/4] overflow-hidden">
+    <Link to={`/hall/${hall.id}`}>
+      <motion.div 
+        whileHover={{ y: -10 }}
+        className="group bg-surface-dark/40 backdrop-blur-md border border-white/5 rounded-[2.5rem] overflow-hidden hover:border-accent/30 transition-all hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col h-full"
+      >
+        {/* Image Container */}
+        <div className="relative aspect-[4/5] overflow-hidden">
           <img 
             src={hall.images[0]} 
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
             alt={hall.name}
-            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-80 group-hover:opacity-100"
           />
-          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-surface-dark via-surface-dark/80 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-bg-dark via-transparent to-transparent opacity-80"></div>
           
-          <div className="absolute top-6 right-6 glass px-3 py-1.5 rounded-full flex items-center gap-1.5 border border-white/10">
-            <Star className="w-3 h-3 text-accent fill-accent" />
-            <span className="text-[11px] font-black text-white">{hall.rating}</span>
+          {/* Badge overlays */}
+          <div className="absolute top-6 right-6 flex flex-col gap-2">
+             <div className="bg-black/60 backdrop-blur-md text-white/90 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest border border-white/10 flex items-center gap-2">
+               <Star className="w-3 h-3 text-accent fill-accent" />
+               {(hall.rating || 0).toFixed(1)}
+             </div>
           </div>
 
           <div className="absolute bottom-6 left-6 right-6">
-            <span className="text-[10px] font-black text-accent uppercase tracking-widest mb-1 block">{hall.location}</span>
-            <h3 className="font-display text-2xl font-bold text-white mb-4 group-hover:text-accent transition-colors leading-tight">{hall.name}</h3>
-            
-            <div className="flex items-center justify-between pt-4 border-t border-white/10">
-              <div className="flex items-center gap-2">
-                <Users className="w-4 h-4 text-zinc-500" />
-                <span className="text-[11px] font-bold text-zinc-400">حتى {hall.capacity} شخص</span>
-              </div>
-              <div className="text-white font-black text-lg">
-                {hall.pricePerNight} <span className="text-[10px] font-normal text-zinc-500">ر.س</span>
-              </div>
+            <div className="flex items-center gap-2 text-white/70 text-xs mb-2">
+              <MapPin className="w-3.5 h-3.5 text-accent" />
+              <span>{hall.location}</span>
             </div>
+            <h3 className="font-display text-2xl font-bold text-white mb-2">{hall.name}</h3>
           </div>
         </div>
-      </div>
+
+        {/* Content */}
+        <div className="p-8 flex flex-col flex-1 gap-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-zinc-400">
+              <Users className="w-4 h-4" />
+              <span className="text-xs font-bold">{hall.capacity} شخص</span>
+            </div>
+            <div className="text-accent text-lg font-black tracking-tighter">
+              {hall.pricePerNight} <span className="text-[10px] uppercase opacity-50 font-medium">ر.س / ليلة</span>
+            </div>
+          </div>
+
+          {/* Features Preview */}
+          <div className="flex flex-wrap gap-2">
+            {(hall.features || []).slice(0, 3).map((feature, i) => (
+              <span key={i} className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 text-[10px] text-zinc-400 font-bold flex items-center gap-1.5 capitalize">
+                <CheckCircle2 className="w-3 h-3 text-accent/50" />
+                {feature}
+              </span>
+            ))}
+            {hall.features && hall.features.length > 3 && (
+              <span className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 text-[10px] text-zinc-500 font-bold">
+                +{hall.features.length - 3} ميزات
+              </span>
+            )}
+          </div>
+
+          <div className="mt-auto flex items-center gap-2 text-accent text-xs font-black uppercase tracking-widest group-hover:gap-4 transition-all">
+            احجز الآن <ChevronLeft className="w-4 h-4" />
+          </div>
+        </div>
+      </motion.div>
     </Link>
   );
 }

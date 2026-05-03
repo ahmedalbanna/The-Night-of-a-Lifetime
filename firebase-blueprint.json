@@ -14,9 +14,27 @@
         "images": { "type": "array", "items": { "type": "string" } },
         "audioTermsUrl": { "type": "string" },
         "features": { "type": "array", "items": { "type": "string" } },
-        "rating": { "type": "number" }
+        "rating": { "type": "number" },
+        "operatingHours": { "type": "string" },
+        "contactPhone": { "type": "string" },
+        "adminId": { "type": "string" }
       },
       "required": ["name", "location", "capacity", "pricePerNight", "depositAmount"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "A review for a hall left by a user.",
+      "type": "object",
+      "properties": {
+        "hallId": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userPhoto": { "type": "string" },
+        "rating": { "type": "number" },
+        "comment": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["hallId", "userId", "rating", "comment"]
     },
     "Booking": {
       "title": "Booking",
@@ -60,6 +78,10 @@
     "users": {
       "schema": "User",
       "description": "User profiles."
+    },
+    "reviews": {
+      "schema": "Review",
+      "description": "Collection of user reviews for halls."
     }
   }
 }
