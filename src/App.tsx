@@ -7,6 +7,8 @@ import { HallDetails } from "./pages/HallDetails";
 import { BookingSuccess } from "./pages/BookingSuccess";
 import { MyBookings } from "./pages/MyBookings";
 import { AdminProfile } from "./pages/AdminProfile";
+import { AdminDashboard } from "./pages/AdminDashboard";
+import { ManageHall } from "./pages/ManageHall";
 import { Navbar } from "./components/Navbar";
 
 export default function App() {
@@ -40,6 +42,9 @@ export default function App() {
             <Route path="/booking-success" element={<BookingSuccess />} />
             <Route path="/my-bookings" element={<MyBookings />} />
             <Route path="/admin/profile" element={<AdminProfile />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/manage-hall" element={<ManageHall />} />
+            <Route path="/admin/manage-hall/:id" element={<ManageHall />} />
           </Routes>
         </main>
         <footer className="bg-black text-zinc-500 py-20 border-t border-white/5">

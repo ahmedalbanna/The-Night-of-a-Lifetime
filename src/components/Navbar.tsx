@@ -58,8 +58,8 @@ export function Navbar({ user }: NavbarProps) {
                 <Calendar className="w-4 h-4" /> حجوزاتي
               </Link>
               {userData?.role === "admin" && (
-                <Link to="/admin/profile" className="text-sm font-bold text-zinc-400 hover:text-accent transition-colors flex items-center gap-2">
-                  <Settings className="w-4 h-4" /> إدارة القاعة
+                <Link to="/admin/dashboard" className="text-sm font-bold text-zinc-400 hover:text-accent transition-colors flex items-center gap-2">
+                  <Settings className="w-4 h-4" /> لوحة التحكم
                 </Link>
               )}
             </>
@@ -100,8 +100,8 @@ export function Navbar({ user }: NavbarProps) {
                 <Calendar className="w-3.5 h-3.5" /> حجوزاتي
               </Link>
               {userData?.role === "admin" && (
-                <Link to="/admin/profile" className="text-[10px] font-black text-zinc-400 hover:text-accent transition-colors flex items-center gap-2">
-                  <Settings className="w-3.5 h-3.5" /> إدارة القاعة
+                <Link to="/admin/dashboard" className="text-[10px] font-black text-zinc-400 hover:text-accent transition-colors flex items-center gap-2">
+                  <Settings className="w-3.5 h-3.5" /> لوحة التحكم
                 </Link>
               )}
             </>
