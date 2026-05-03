@@ -3,7 +3,7 @@ import { auth, db } from "@/src/lib/firebase";
 import { collection, query, where, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { Booking, Hall } from "@/src/types";
 import { motion, AnimatePresence } from "motion/react";
-import { Calendar, MapPin, X, AlertTriangle, CheckCircle, Clock } from "lucide-react";
+import { Calendar, MapPin, X, AlertTriangle, CheckCircle, Clock, Bell } from "lucide-react";
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
 
@@ -102,6 +102,12 @@ export function MyBookings() {
                             <Clock className="w-3.5 h-3.5" /> الوقت
                          </span>
                          <p className="text-lg font-bold text-white">مسائي / كامل</p>
+                      </div>
+                      <div className="space-y-1 hidden md:block">
+                         <span className="text-[10px] font-black text-accent uppercase tracking-widest flex items-center gap-2">
+                             <Bell className="w-3.5 h-3.5" /> التذكير
+                         </span>
+                         <p className="text-xs font-bold text-accent">نشط (24 ساعة)</p>
                       </div>
                       <div className="md:col-span-1 flex items-end justify-end">
                          <button 

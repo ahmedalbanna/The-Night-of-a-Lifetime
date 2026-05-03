@@ -1,9 +1,26 @@
+import React from "react";
 import { Hall } from "@/src/types";
 import { Link } from "react-router-dom";
-import { Users, MapPin, Star, CheckCircle2, ChevronLeft } from "lucide-react";
+import { Users, MapPin, Star, CheckCircle2, ChevronLeft, Share2 } from "lucide-react";
 import { motion } from "motion/react";
 
 export function HallCard({ hall }: { hall: Hall }) {
+  const handleShare = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const shareData = {
+      title: hall.name,
+      text: `اكتشف قاعة ${hall.name} على منصة أفراحي`,
+      url: `${window.location.origin}/hall/${hall.id}`,
+    };
+    if (navigator.share) {
+      navigator.share(shareData).catch(console.error);
+    } else {
+      navigator.clipboard.writeText(`${window.location.origin}/hall/${hall.id}`);
+      alert("تم نسخ الرابط!");
+    }
+  };
+
   return (
     <Link to={`/hall/${hall.id}`}>
       <motion.div 
@@ -26,6 +43,13 @@ export function HallCard({ hall }: { hall: Hall }) {
                {(hall.rating || 0).toFixed(1)}
              </div>
           </div>
+
+          <button 
+            onClick={handleShare}
+            className="absolute top-6 left-6 p-3 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-white hover:bg-accent hover:text-black transition-all z-10"
+          >
+            <Share2 className="w-4 h-4" />
+          </button>
 
           <div className="absolute bottom-6 left-6 right-6">
             <div className="flex items-center gap-2 text-white/70 text-xs mb-2">

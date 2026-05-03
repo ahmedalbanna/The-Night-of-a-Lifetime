@@ -13,6 +13,20 @@ export function Home() {
   
   // States for search and filters
   const [searchTerm, setSearchTerm] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  const suggestions = useMemo(() => {
+    if (!searchTerm.trim()) return [];
+    const term = searchTerm.toLowerCase();
+    const matches = new Set<string>();
+    
+    halls.forEach(hall => {
+      if (hall.name.toLowerCase().includes(term)) matches.add(hall.name);
+      if (hall.location.toLowerCase().includes(term)) matches.add(hall.location);
+    });
+    
+    return Array.from(matches).slice(0, 5);
+  }, [halls, searchTerm]);
   const [locationFilter, setLocationFilter] = useState("");
   const [capacityFilter, setCapacityFilter] = useState(0);
   const [amenityFilter, setAmenityFilter] = useState<string[]>([]);
@@ -151,16 +165,44 @@ export function Home() {
               <h2 className="font-display text-4xl md:text-5xl font-bold text-white leading-tight">استكشف قاعات <br /> الأحلام</h2>
             </div>
             
-            <div className="flex flex-col md:flex-row gap-4 items-stretch">
+            <div className="flex flex-col md:flex-row gap-4 items-stretch relative">
               <div className="relative group min-w-[300px]">
                 <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500 group-focus-within:text-accent transition-colors" />
                 <input 
                   type="text" 
                   placeholder="ابحث بالاسم أو الموقع..." 
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setShowSuggestions(true);
+                  }}
+                  onFocus={() => setShowSuggestions(true)}
                   className="w-full bg-surface-dark border border-white/5 rounded-2xl md:rounded-full py-4 pr-12 pl-6 text-white text-sm outline-none focus:ring-2 focus:ring-accent/20 transition-all"
                 />
+                
+                <AnimatePresence>
+                  {showSuggestions && suggestions.length > 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="absolute top-full left-0 right-0 mt-2 bg-surface-dark border border-white/10 rounded-2xl overflow-hidden z-50 shadow-2xl backdrop-blur-xl"
+                    >
+                      {suggestions.map((s, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => {
+                            setSearchTerm(s);
+                            setShowSuggestions(false);
+                          }}
+                          className="w-full text-right px-6 py-4 text-sm text-zinc-300 hover:bg-white/5 hover:text-accent transition-colors border-b border-white/5 last:border-0"
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
               <button 
                 onClick={() => setShowFilters(!showFilters)}

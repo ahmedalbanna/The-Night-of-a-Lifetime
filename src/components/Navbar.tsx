@@ -88,52 +88,41 @@ export function Navbar({ user }: NavbarProps) {
             </button>
           )}
         </div>
-
-        {/* Mobile Menu Toggle */}
-        <button className="md:hidden p-2 text-white" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-          <Menu className="w-6 h-6" />
-        </button>
       </div>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-surface-dark border-b border-white/10 overflow-hidden"
-          >
-            <div className="p-4 flex flex-col gap-4 text-right">
-              <Link to="/" onClick={() => setIsMenuOpen(false)} className="py-2 text-zinc-400 font-bold">الرئيسية</Link>
-              {user && (
-                <>
-                  <Link to="/my-bookings" onClick={() => setIsMenuOpen(false)} className="py-2 text-zinc-400 font-bold">حجوزاتي</Link>
-                  {userData?.role === "admin" && (
-                    <Link to="/admin/profile" onClick={() => setIsMenuOpen(false)} className="py-2 text-zinc-400 font-bold">إدارة القاعة</Link>
-                  )}
-                </>
+      {/* Mobile Menu - Horizontal Scrollable Strip */}
+      <div className="md:hidden overflow-x-auto custom-scrollbar-hide border-t border-white/5 bg-black/20">
+        <div className="flex items-center gap-8 px-6 py-4 whitespace-nowrap min-w-max">
+          <Link to="/" className="text-[10px] font-black text-accent uppercase tracking-widest">الرئيسية</Link>
+          {user && (
+            <>
+              <Link to="/my-bookings" className="text-[10px] font-black text-zinc-400 hover:text-accent transition-colors flex items-center gap-2">
+                <Calendar className="w-3.5 h-3.5" /> حجوزاتي
+              </Link>
+              {userData?.role === "admin" && (
+                <Link to="/admin/profile" className="text-[10px] font-black text-zinc-400 hover:text-accent transition-colors flex items-center gap-2">
+                  <Settings className="w-3.5 h-3.5" /> إدارة القاعة
+                </Link>
               )}
-              {user ? (
-                <div className="flex items-center justify-between py-4 border-t border-white/10">
-                  <div className="flex items-center gap-3">
-                    <img src={user.photoURL || ""} alt="" className="w-8 h-8 rounded-full" />
-                    <span className="text-sm font-medium text-white">{user.displayName}</span>
-                  </div>
-                  <button onClick={handleLogout} className="text-red-500"><LogOut className="w-5 h-5" /></button>
-                </div>
-              ) : (
-                <button 
-                  onClick={handleLogin}
-                  className="w-full bg-accent text-black py-4 rounded-xl font-black uppercase tracking-widest"
-                >
-                  تسجيل الدخول
-                </button>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </>
+          )}
+          {user ? (
+            <button 
+              onClick={handleLogout}
+              className="text-[10px] font-black text-red-500/60 hover:text-red-500 transition-colors uppercase tracking-widest flex items-center gap-2"
+            >
+              <LogOut className="w-3.5 h-3.5" /> خروج
+            </button>
+          ) : (
+            <button 
+              onClick={handleLogin}
+              className="text-[10px] font-black text-white hover:text-accent transition-colors uppercase tracking-widest"
+            >
+              دخول
+            </button>
+          )}
+        </div>
+      </div>
     </nav>
   );
 }

@@ -8,7 +8,7 @@ import {
   MapPin, Users, Star, CheckCircle2, Play, Pause, 
   Calendar, Info, ShieldCheck, CreditCard, ChevronLeft, 
   ChevronRight, X, User, MessageCircle, Clock, Phone,
-  Camera, ArrowLeft, Send
+  Camera, ArrowLeft, Send, Share2, ZoomIn, Bell
 } from "lucide-react";
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
@@ -28,10 +28,12 @@ export function HallDetails() {
   const [audioProgress, setAudioProgress] = useState(0);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [bookingLoading, setBookingLoading] = useState(false);
+  const [isReminderSet, setIsReminderSet] = useState(false);
   
   // Gallery states
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showGalleryModal, setShowGalleryModal] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState(1);
   
   // Booking confirmation state
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -104,6 +106,25 @@ export function HallDetails() {
     }
 
     setShowConfirmModal(true);
+  };
+
+  const handleShare = async () => {
+    if (!hall) return;
+    const shareData = {
+      title: hall.name,
+      text: `اكتشف قاعة ${hall.name} في ${hall.location} على منصة أفراحي`,
+      url: window.location.href,
+    };
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        alert("تم نسخ الرابط لمشاركته!");
+      }
+    } catch (error) {
+      console.error("Error sharing", error);
+    }
   };
 
   const confirmAndProceed = async () => {
@@ -243,12 +264,12 @@ export function HallDetails() {
             <h1 className="text-6xl md:text-8xl font-black text-white leading-tight font-display drop-shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
                {hall.name}
             </h1>
-            <div className="flex items-center gap-6 text-white/80">
+            <div className="flex flex-wrap items-center gap-6 text-white/80">
                <div className="flex items-center gap-2">
                  <MapPin className="w-5 h-5 text-accent" />
                  <span className="text-lg font-bold">{hall.location}</span>
                </div>
-               <div className="flex items-center gap-2 border-r border-white/10 pr-6">
+               <div className="flex items-center gap-2 border-l border-white/10 pl-6 border-r border-white/10 pr-6">
                  <Users className="w-5 h-5 text-accent" />
                  <span className="text-lg font-bold">{hall.capacity} شخص</span>
                </div>
@@ -256,6 +277,12 @@ export function HallDetails() {
                  <Star className="w-5 h-5 text-accent fill-accent" />
                  <span className="text-lg font-bold">{hall.rating.toFixed(1)} <span className="text-sm font-normal text-white/50">({reviews.length} تقييم)</span></span>
                </div>
+               <button 
+                onClick={handleShare}
+                className="p-3 rounded-2xl bg-white/5 border border-white/10 text-accent hover:bg-accent hover:text-black transition-all flex items-center gap-2 text-xs font-black uppercase tracking-widest"
+               >
+                 <Share2 className="w-4 h-4" /> مشاركة
+               </button>
             </div>
           </motion.div>
         </div>
@@ -482,6 +509,21 @@ export function HallDetails() {
                        </div>
                     </div>
 
+                    <div className="space-y-3 pt-2">
+                       <button 
+                        onClick={() => setIsReminderSet(!isReminderSet)}
+                        className={`w-full flex items-center justify-between p-5 rounded-2xl border transition-all ${isReminderSet ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-bg-dark border-white/5 text-zinc-500'}`}
+                       >
+                         <div className="flex items-center gap-3">
+                           <Bell className={`w-5 h-5 ${isReminderSet ? 'animate-bounce' : ''}`} />
+                           <span className="text-xs font-bold font-sans">تذكيري قبل الموعد بـ 24 ساعة</span>
+                         </div>
+                         <div className={`w-10 h-5 rounded-full relative transition-colors ${isReminderSet ? 'bg-accent' : 'bg-zinc-800'}`}>
+                           <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${isReminderSet ? 'right-6' : 'right-1'}`}></div>
+                         </div>
+                       </button>
+                    </div>
+
                     <button 
                       disabled={bookingLoading || !selectedDate}
                       onClick={handleBooking}
@@ -526,38 +568,54 @@ export function HallDetails() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-10 md:p-20"
+            className="fixed inset-0 z-[100] bg-black/95 flex flex-col items-center justify-center p-4 md:p-10"
           >
-             <button 
-               onClick={() => setShowGalleryModal(false)}
-               className="absolute top-10 right-10 w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-red-500 transition-all z-[110]"
-             >
-               <X className="w-8 h-8" />
-             </button>
+             <div className="absolute top-10 right-10 flex gap-4 z-[110]">
+               <button 
+                 onClick={() => setZoomLevel(prev => prev === 1 ? 2 : 1)}
+                 className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-accent hover:text-black transition-all"
+                 title="تكبير/تصغير"
+               >
+                 <ZoomIn className={`w-8 h-8 transition-transform ${zoomLevel > 1 ? 'scale-125 text-accent' : ''}`} />
+               </button>
+               <button 
+                 onClick={() => {
+                   setShowGalleryModal(false);
+                   setZoomLevel(1);
+                 }}
+                 className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-red-500 transition-all"
+               >
+                 <X className="w-8 h-8" />
+               </button>
+             </div>
 
              <button 
                onClick={prevImage}
-               className="absolute left-10 top-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-accent hover:text-black transition-all"
+               className="absolute left-10 top-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-accent hover:text-black transition-all z-[110]"
              >
                <ChevronRight className="w-10 h-10" />
              </button>
              
-             <motion.img 
-               key={currentImageIndex}
-               src={hall.images[currentImageIndex]}
-               initial={{ opacity: 0, scale: 0.9 }}
-               animate={{ opacity: 1, scale: 1 }}
-               className="max-w-full max-h-full object-contain rounded-3xl"
-             />
+             <div className="relative w-full h-full flex items-center justify-center overflow-auto custom-scrollbar-hide">
+               <motion.img 
+                 key={currentImageIndex}
+                 src={hall.images[currentImageIndex]}
+                 initial={{ opacity: 0, scale: 0.9 }}
+                 animate={{ opacity: 1, scale: zoomLevel }}
+                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                 className={`max-w-full max-h-full object-contain rounded-3xl cursor-zoom-in ${zoomLevel > 1 ? 'cursor-zoom-out' : ''}`}
+                 onClick={() => setZoomLevel(prev => prev === 1 ? 2 : 1)}
+               />
+             </div>
 
              <button 
                onClick={nextImage}
-               className="absolute right-10 top-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-accent hover:text-black transition-all"
+               className="absolute right-10 top-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-accent hover:text-black transition-all z-[110]"
              >
                <ChevronLeft className="w-10 h-10" />
              </button>
 
-             <div className="absolute bottom-10 left-10 right-10 flex justify-center gap-3">
+             <div className="absolute bottom-10 left-10 right-10 flex justify-center gap-3 z-[110]">
                 {hall.images.map((_, i) => (
                   <div 
                     key={i}
